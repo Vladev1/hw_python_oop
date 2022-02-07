@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Dict, List, Type
 
 
@@ -11,15 +11,15 @@ class InfoMessage:
     distance: float
     speed: float
     calories: float
+    TRAINING_RESULT = ('Тип тренировки: {training_type}; '
+                       'Длительность: {duration:.3f} ч.; '
+                       'Дистанция: {distance:.3f} км; '
+                       'Ср. скорость: {speed:.3f} км/ч; '
+                       'Потрачено ккал: {calories:.3f}.')
 
     def get_message(self) -> str:
         """Вывод данных о тренировке"""
-        message = (f'Тип тренировки: {self.training_type}; '
-                   f'Длительность: {self.duration:.3f} ч.; '
-                   f'Дистанция: {self.distance:.3f} км; '
-                   f'Ср. скорость: {self.speed:.3f} км/ч; '
-                   f'Потрачено ккал: {self.calories:.3f}.')
-        return message
+        return self.TRAINING_RESULT.format(**asdict(self))
 
 
 class Training:
@@ -62,13 +62,6 @@ class Running(Training):
     """Тренировка: бег."""
     SPEED_MAIN_CALORIE_COEFFICIENT: int = 18
     SPEED_MEAN_CALORIE_DEDUCTED: int = 20
-
-    def __init__(self,
-                 action: int,
-                 duration: float,
-                 weight: float,
-                 ) -> None:
-        super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
         """Расчёт потраченных каллорий во время бега."""
@@ -140,12 +133,12 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    detrmining_type_training: Dict[str, Type] = {
+    workout: Dict[str, Type[Training]] = {
         'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming
     }
-    if workout_type not in detrmining_type_training.keys():
+    if workout_type not in workout:
         raise ValueError('Трекер пока не может считать данный тип тренировки')
-    return detrmining_type_training[workout_type](*data)
+    return workout[workout_type](*data)
 
 
 def main(training: Training) -> None:
