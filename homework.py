@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Dict
+from typing import Dict, Any, Type
 
 
 @dataclass
@@ -140,8 +140,9 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    detrmining_type_training: Dict[str, int] = {
-        'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming}
+    detrmining_type_training: Dict[str, Type[Any]] = {
+        'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming
+    }
     if workout_type not in detrmining_type_training.keys():
         raise ValueError('Трекер пока не может считать данный тип тренировки')
     return detrmining_type_training[workout_type](*data)
