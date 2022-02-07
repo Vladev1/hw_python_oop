@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Dict, Any, Type
 
 
 @dataclass
@@ -140,7 +139,7 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    detrmining_type_training: Dict[str, Type[Any]] = {
+    detrmining_type_training: dict = {
         'RUN': Running, 'WLK': SportsWalking, 'SWM': Swimming
     }
     if workout_type not in detrmining_type_training.keys():
